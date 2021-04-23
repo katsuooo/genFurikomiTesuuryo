@@ -1,0 +1,18 @@
+210423
+
+
+https://stackoverflow.com/questions/61797027/blazor-requesting-a-json-file
+
+
+
+
+
+In Blazor Server you can use ReadAllText("wwwroot/data/Users.json");
+In Blazor WebAssembly you don't provide the wwwroot/ part but since ReadAllText() is not supported there it doesn't really matter.
+Under WebAssembly you can await Http.GetStringAsync("data/Users.json");
+Check FetchData.razor and weather.json for a full example.
+
+
+
+
+

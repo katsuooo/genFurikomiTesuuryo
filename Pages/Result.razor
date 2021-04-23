@@ -2,6 +2,7 @@
 
 @using genFurikomiTesuuryo.Data
 @inject WeatherForecastService ForecastService
+@inject MyService MyService
 
 <h1>Caliculation result</h1>
 
@@ -42,5 +43,6 @@ else
     protected override async Task OnInitializedAsync()
     {
         forecasts = await ForecastService.GetForecastAsync(DateTime.Now);
+        MyService.MyServiceHellow();
     }
 }

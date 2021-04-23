@@ -28,6 +28,7 @@ namespace genFurikomiTesuuryo
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
+            services.AddSingleton<MyService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -51,6 +52,9 @@ namespace genFurikomiTesuuryo
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
             });
+
+            //Console.WriteLine('-end of configure-')
+            //Print('-end of configure-')
         }
     }
 }
