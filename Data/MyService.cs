@@ -41,7 +41,7 @@ namespace genFurikomiTesuuryo.Data
             Console.WriteLine(data);
             */
             
-           　using (StreamReader r = new StreamReader(filepath))
+            using (StreamReader r = new StreamReader(filepath))
             {
                 var json = r.ReadToEnd();
                 var jobj = JObject.Parse(json);       

@@ -2,16 +2,22 @@
 
 @using genFurikomiTesuuryo.Data
 @inject MyService MyService
+<!--
+ @inject TestGetService TestGetService 
+-->
 
 <h1>Input data</h1>
 
 <p>Current count: @currentCount</p>
 
-<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+<button class="btn btn-primary btn-sm" @onclick="IncrementCount">Click me</button>
 <br>
-<button class="btn btn-primary" @onclick="read">read json</button>
+<button class="btn btn-success btn-sm" @onclick="read">read json in server</button>
+<br>
+<button class="btn btn-danger btn-sm" @onclick="getJson">get json</button>
 <br>
 <span style='color: red;'>debug: @debug</span>
+<span style='color: red;'>test-get: @testData</span>
 @code {
     private int currentCount = 0;
     private string debug = "";
@@ -23,9 +29,22 @@
         MyService.Write("increment_sw on");
         debug = "increment_sw on";
     }
-    private void read(){
+    private void read()
+    {
         debug = "read_json on";    
         MyService.ReadJson();    
     }
+    private TestGet[] testData;
+    private void getJson()
+    {
+
+    }
+    //protected override async Task getJson()
+    /*
+    protected override async Task OnInitializedAsync()
+    {
+        testData = await TestGetService.GetTestGetAsync();
+    }
+    */
 }
 

@@ -29,6 +29,7 @@ namespace genFurikomiTesuuryo
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
             services.AddSingleton<MyService>();
+            //services.AddSingleton<TestGetService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
