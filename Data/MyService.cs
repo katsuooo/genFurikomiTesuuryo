@@ -2,8 +2,11 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.IO;
-
-//Newtonsoft.Json.Linq;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Json;
+using System.Text.Json;
+using System.Text;
+using Newtonsoft.Json.Linq;
 
 
 namespace genFurikomiTesuuryo.Data
@@ -29,20 +32,36 @@ namespace genFurikomiTesuuryo.Data
         {
             string filepath = "./Data/test.json";
 
-            string dummy = File.ReadAllText(filepath);
-            Console.WriteLine(dummy);
-            string result = string.Empty;
+            //string dummy = File.ReadAllText(filepath);
             /*
-            using (StreamReader r = new StreamReader(filepath))
+            var ms = new MemoryStream(Encoding.UTF8.GetBytes((dummy)));
+            string result = string.Empty;
+            ms.Seek(0, SeekOrigin.Begin);
+            var data = serializer.ReadObject(ms) as JsonData;
+            Console.WriteLine(data);
+            */
+            
+           　using (StreamReader r = new StreamReader(filepath))
             {
                 var json = r.ReadToEnd();
                 var jobj = JObject.Parse(json);       
-                result = jobj.ToString();
-                Console.WriteLine(result);              
+                var result = jobj.ToString();
+                Console.WriteLine(jobj);
+                Console.WriteLine(result);           
             }
-            */
+            
             //File.WriteAllText(filepath, result);
             //return 'a';
         }
+
+
+    }
+    [DataContract]
+    public class JsonData
+    {
+        //[DataMember(Name = "@test")]
+        //public string[] Context { get; set; }
+        [DataMember(Name = "test")] //データメンバ属性
+        public string Value { get; set; }
     }
 }

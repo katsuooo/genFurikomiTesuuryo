@@ -16,3 +16,51 @@ Check FetchData.razor and weather.json for a full example.
 
 
 
+jobject使うと便利？
+
+
+https://stackoverflow.com/questions/57593280/how-to-deserialize-a-json-in-net-core-3-0
+
+クライアントサンプル
+
+dotnat
+
+D:\work\genFurikomiTesuuryo>dotnet add package Newtonsoft.json
+  復元対象のプロジェクトを決定しています...
+  Writing C:\Users\vostr\AppData\Local\Temp\tmp8EB1.tmp
+info : パッケージ 'Newtonsoft.json' の PackageReference をプロジェクト 'D:\work\genFurikomiTesuuryo\genFurikomiTesuuryo.csproj' に追加しています。
+info :   GET https://api.nuget.org/v3/registration5-gz-semver2/newtonsoft.json/index.json
+info :   OK https://api.nuget.org/v3/registration5-gz-semver2/newtonsoft.json/index.json 721 ミリ秒
+info : D:\work\genFurikomiTesuuryo\genFurikomiTesuuryo.csproj のパッケージを復 元しています...
+info :   GET https://api.nuget.org/v3-flatcontainer/newtonsoft.json/index.json
+info :   OK https://api.nuget.org/v3-flatcontainer/newtonsoft.json/index.json 705 ミリ秒
+info :   GET https://api.nuget.org/v3-flatcontainer/newtonsoft.json/13.0.1/newtonsoft.json.13.0.1.nupkg
+info :   OK https://api.nuget.org/v3-flatcontainer/newtonsoft.json/13.0.1/newtonsoft.json.13.0.1.nupkg 9 ミリ秒
+info : Newtonsoft.Json 13.0.1 をインストールしています。
+info : パッケージ 'Newtonsoft.json' は、プロジェクト 'D:\work\genFurikomiTesuuryo\genFurikomiTesuuryo.csproj' のすべての指定されたフレームワークとの互換性があります。
+info : ファイル 'D:\work\genFurikomiTesuuryo\genFurikomiTesuuryo.csproj' に追加されたパッケージ 'Newtonsoft.json' バージョン '13.0.1' の PackageReference。
+info : 復元をコミットしています...
+info : アセット ファイルをディスクに書き込んでいます。パス: D:\work\genFurikomiTesuuryo\obj\project.assets.json
+log  : D:\work\genFurikomiTesuuryo\genFurikomiTesuuryo.csproj を復元しました (1.69 sec)。
+
+ローカルのgenFurikomiTesuuryoにインストールされたのか？
+
+
+
+using Newtonsoft.Json.Linq;
+
+....
+            string filepath = "./Data/test.json";
+
+           　using (StreamReader r = new StreamReader(filepath))
+            {
+                var json = r.ReadToEnd();
+                var jobj = JObject.Parse(json);       
+                var result = jobj.ToString();
+                Console.WriteLine(jobj);
+                Console.WriteLine(result);           
+            }
+
+
+こんなので読めた。
+
