@@ -11,7 +11,7 @@ using Newtonsoft.Json.Linq;
 
 namespace genFurikomiTesuuryo.Data
 {
-    public class GetJson1Service
+    public class GetCsvService
     {
         public void MyServiceHellow()
         {
@@ -100,45 +100,6 @@ namespace genFurikomiTesuuryo.Data
             };
             var jobj = JObject.Parse(json);
             return Task.FromResult(jobj);
-        }
-        /**
-         csv conv to object / space delimited
-        */
-        public Task<GetJson6[]> GetJson6Async(string fname)
-        {
-            string filepath = "./Data/" + fname + ".csv";
-            Console.WriteLine("fname-"+filepath);
-            var csv = new String("");
-            using (StreamReader r = new StreamReader(filepath))
-            {
-                //var json = r.ReadToEnd();
-                //jobj = JObject.Parse(json);       
-                //result = jobj.ToString();        
-                csv = r.ReadToEnd();
-            };
-            var lines = csv.Split('\n');
-            Console.WriteLine("csv-"+lines[0]);
-            var num = lines.Length;
-            return Task.FromResult(Enumerable.Range(1, num).Select(index => new GetJson6
-            {
-                Date = lines[index-1].Split(' ')[0],
-                Value = int.Parse(lines[index-1].Split(' ')[1]),
-                Name = lines[index-1].Split(' ')[2],
-                Memo = lines[index-1].Split(' ')[3]
-            }).ToArray());
-        }
-                /**
-         csv conv to object / space delimited
-        */
-        public Task<GetJson6[]> GetJson6aAsync()
-        {
-            return Task.FromResult(Enumerable.Range(1, 2).Select(index => new GetJson6
-            {
-                Date = "1/1",
-                Value = 0,
-                Name = "a",
-                Memo = "a"
-            }).ToArray());
         }
     }
 }

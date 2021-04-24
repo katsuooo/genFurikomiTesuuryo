@@ -30,6 +30,9 @@
 <button class="btn btn-danger btn-sm" @onclick="getJson5">get json5</button>
 <span>read json file</span>
 <br>
+<button class="btn btn-danger btn-sm" @onclick="getJson6">get json6</button>
+<span>read csv file</span>
+<br>
 <span style='color: red;'>debug: @debug</span>
 <br>
 <span>forcast</span>
@@ -41,6 +44,21 @@
 <span>service4: @gjService4</span>
 <br>
 <span>service5: @gjService5</span>
+<br>
+<span>service6: @gjService6</span>
+<table class='table'>
+        <tbody>
+            @foreach (var csv in gjService6)
+            {
+                <tr>
+                    <td>@csv.Date</td>
+                    <td>@csv.Value</td>
+                    <td>@csv.Name</td>
+                    <td>@csv.Memo</td>
+                </tr>
+            }
+        </tbody>
+</table>
 @code {
     private string debug = "";
 
@@ -54,6 +72,11 @@
         debug = "get-json1 on";    
         GetJson1Service.ReadJson();  
         //OnClickGetJson();  
+    }
+    private GetJson6[] gjService6;
+    protected async Task getJson6()
+    {
+        gjService6 = await GetJson1Service.GetJson6Async("x");
     }
     private JObject gjService5;
     protected async Task getJson5()
@@ -99,6 +122,7 @@
     protected override async Task OnInitializedAsync()
     {
         forecasts = await GetJson1Service.GetJson1Async(DateTime.Now);
+        gjService6 = await GetJson1Service.GetJson6aAsync();
     }
 }
 
