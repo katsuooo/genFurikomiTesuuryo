@@ -7,18 +7,13 @@
 
 <h1>Input data</h1>
 
-<p>Current count: @currentCount</p>
 
-<button class="btn btn-primary btn-sm" @onclick="IncrementCount">Click me</button>
-<br>
-<button class="btn btn-success btn-sm" @onclick="read">read json in server</button>
-<br>
 
 <span style='color: red;'>debug: @debug</span>
 <div class='row'>
 <div class='col-sm-6'>
     <h2>銀行売上入金データ</h2>
-    <table class='table'>
+    <table class='table table-success table-striped'>
         <thead>
             <tr>
                 <th>日付</th>
@@ -44,7 +39,7 @@
 </div>
 <div class='col-sm-6'>
     <h2>請求書データ</h2>
-    <table class='table'>
+    <table class='table table-danger table-striped'>
         <thead>
             <tr>
                 <th>日付</th>
