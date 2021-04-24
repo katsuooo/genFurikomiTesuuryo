@@ -7,6 +7,7 @@ using System.Runtime.Serialization.Json;
 using System.Text.Json;
 using System.Text;
 using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
 
 
 namespace genFurikomiTesuuryo.Data
@@ -118,13 +119,34 @@ namespace genFurikomiTesuuryo.Data
             };
             var lines = csv.Split('\n');
             Console.WriteLine("csv-"+lines[0]);
+            //List<string>[] lineItemsList = new List<string>[lines.Length];
+            var lineItemsList = new List<List<string>>();
+
+            //int index = 0;
+            foreach(string line in lines)
+            {
+                var lineItems = line.Split(' ');
+                var xList = new List<string>(lineItems);
+                if(xList.Count() <= 4){
+                    xList.Add("");
+                }
+                Console.WriteLine("line-"+ xList.Count().ToString());
+                lineItemsList.Add(xList);
+                //index++;
+            }
             var num = lines.Length;
             return Task.FromResult(Enumerable.Range(1, num).Select(index => new GetJson6
-            {
+            {/*
                 Date = lines[index-1].Split(' ')[0],
                 Value = int.Parse(lines[index-1].Split(' ')[1]),
-                Name = lines[index-1].Split(' ')[2],
-                Memo = lines[index-1].Split(' ')[3]
+                Name = lines[index-1].Split(' ')[3],
+                Memo = lines[index-1].Split(' ')[4];
+                */
+                Date = lineItemsList[index-1][0],
+                Value = int.Parse(lineItemsList[index-1][1]),
+                Kind = lineItemsList[index-1][2], 
+                Name = lineItemsList[index-1][3],
+                Memo = lineItemsList[index-1][4]
             }).ToArray());
         }
                 /**
@@ -136,8 +158,31 @@ namespace genFurikomiTesuuryo.Data
             {
                 Date = "1/1",
                 Value = 0,
+                Kind = "u",
                 Name = "a",
                 Memo = "a"
+            }).ToArray());
+        }
+        public Task<GetJson7[]> GetJson7Async(string fname)
+        {
+            string filepath = "./Data/" + fname + ".csv";
+            Console.WriteLine("fname-"+filepath);
+            var csv = new String("");
+            using (StreamReader r = new StreamReader(filepath))
+            {
+                //var json = r.ReadToEnd();
+                //jobj = JObject.Parse(json);       
+                //result = jobj.ToString();        
+                csv = r.ReadToEnd();
+            };
+            var lines = csv.Split('\n');
+            Console.WriteLine("csv-"+lines[0]);
+            var num = lines.Length;
+            return Task.FromResult(Enumerable.Range(1, num).Select(index => new GetJson7
+            {
+                Date = lines[index-1].Split(' ')[0],
+                Value = int.Parse(lines[index-1].Split(' ')[1]),
+                Title = lines[index-1].Split(' ')[2]
             }).ToArray());
         }
     }
