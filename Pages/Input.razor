@@ -14,10 +14,9 @@
 <br>
 <button class="btn btn-success btn-sm" @onclick="read">read json in server</button>
 <br>
-<button class="btn btn-danger btn-sm" @onclick="getJson">get json</button>
-<br>
+
 <span style='color: red;'>debug: @debug</span>
-<span style='color: red;'>test-get: @testData</span>
+
 @code {
     private int currentCount = 0;
     private string debug = "";
@@ -34,11 +33,7 @@
         debug = "read_json on";    
         MyService.ReadJson();    
     }
-    private TestGet[] testData;
-    private void getJson()
-    {
 
-    }
     //protected override async Task getJson()
     /*
     protected override async Task OnInitializedAsync()

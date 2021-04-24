@@ -1,0 +1,104 @@
+@page "/Test1"
+
+@using genFurikomiTesuuryo.Data
+@using Newtonsoft.Json.Linq
+@inject MyService MyService
+@inject GetJson1Service GetJson1Service
+
+
+<h1>Test page</h1>
+
+
+<button class="btn btn-primary btn-sm" @onclick="get1">test1</button>
+<br>
+
+<button class="btn btn-success btn-sm" @onclick="getJson1Test">get json1 test</button>
+<br>
+
+<button class="btn btn-danger btn-sm" @onclick="getJson1">get json1</button>
+<br>
+
+<button class="btn btn-danger btn-sm" @onclick="getJson2">get json2</button>
+<br>
+
+<button class="btn btn-danger btn-sm" @onclick="getJson3">get json3</button>
+<span>read string</span>
+<br>
+<button class="btn btn-danger btn-sm" @onclick="getJson4">get json4</button>
+<span>read text file string</span>
+<br>
+<button class="btn btn-danger btn-sm" @onclick="getJson5">get json5</button>
+<span>read json file</span>
+<br>
+<span style='color: red;'>debug: @debug</span>
+<br>
+<span>forcast</span>
+<span>@forecasts[0].TemperatureC</span>
+<span>service3: @gjService3</span>
+<br>
+<span>service3: @gjService3</span>
+<br>
+<span>service4: @gjService4</span>
+<br>
+<span>service5: @gjService5</span>
+@code {
+    private string debug = "";
+
+    private void get1()
+    {
+        debug = "read_json on";    
+        MyService.ReadJson();    
+    }
+    private void getJson1Test()
+    {
+        debug = "get-json1 on";    
+        GetJson1Service.ReadJson();  
+        //OnClickGetJson();  
+    }
+    private JObject gjService5;
+    protected async Task getJson5()
+    {
+        gjService5 = await GetJson1Service.GetJson5Async();
+    }
+    private String gjService4;
+    protected async Task getJson4()
+    {
+        gjService4 = await GetJson1Service.GetJson4Async();
+    }
+    /*
+    D:\work\genFurikomiTesuuryo\Pages\Test1.razor(43,28): 
+    error CS1983: 非同期メソッドの戻り値の型は、
+    void、Task、Task<T>、task-like 型、IAsyncEnumerable<T>、IAsyncEnumerator<T> 
+    でなければなりません [D:\work\genFurikomiTesuuryo\genFurikomiTesuuryo.csproj]
+    */
+    private String gjService3;
+    protected async Task getJson3()
+    {
+        gjService3 = await GetJson1Service.GetJson3Async();
+    }
+    /*
+     get2
+    */
+    private GetJson2[] gjService2;
+    protected async Task getJson2()
+    {
+        gjService2 = await GetJson1Service.GetJson2Async(DateTime.Now);
+    }
+    protected async Task getJson1()
+    {
+        forecasts = await GetJson1Service.GetJson1Async(DateTime.Now);
+    }
+    protected async Task OnClickGetJson()
+    {
+        forecasts = await GetJson1Service.GetJson1Async(DateTime.Now);
+    }
+    /**
+     起動時、forecastsデータのリード
+    */
+    private GetJson1[] forecasts;
+    protected override async Task OnInitializedAsync()
+    {
+        forecasts = await GetJson1Service.GetJson1Async(DateTime.Now);
+    }
+}
+
