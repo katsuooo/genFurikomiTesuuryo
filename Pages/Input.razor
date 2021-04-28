@@ -61,13 +61,10 @@
 </div>
 </div>
 @code {
-    private int currentCount = 0;
+
     private string debug = "";
     private void IncrementCount()
     {
-        //currentCount++;
-        //forecasts = await Http.GetJsonAsync<WeatherForecast[]>("sample-data/weather.json");
-        //MyService.MyServiceHellow();
         MyService.Write("increment_sw on");
         debug = "increment_sw on";
     }
