@@ -1,0 +1,200 @@
+﻿@page "/twozonesMy"
+@using genFurikomiTesuuryo.Components;
+@using genFurikomiTesuuryo.Data;
+@using Plk.Blazor.DragDrop;
+
+<div class="bg-success">You can drag items with name "Item 1" from one dropzone to another dropzone.</div>
+
+<hr />
+<!--
+<div class='row' @onmouseup='mouseup'>
+-->
+<span>注：移動できるのはitem 1だけ</span>
+<div class='row'>
+    <!----------------------------------------------------
+    left side
+    -------------------------------->
+
+    <div class='col-sm-6'>
+        <div class="bg-light">First Dropzone:</div>
+
+
+        <Dropzone Items="MyFirstList"
+                  TItem="TodoItem"
+                  OnItemDrop="@((i)=>lastdropped = i)"
+                  AllowsDrag='(d)=>d.Titel == "Item 1"'>
+            <div style="border: 2px solid blue">
+                @context.Titel
+            </div>
+        </Dropzone>
+
+        <span>テスト用表示</span>
+
+        @foreach (var item in MyFirstList)
+        {
+            <div>
+                <span class='badge bg-success' style='font-size:16px;'>@item.Titel</span>
+            </div>
+        }
+        <hr />
+    </div>
+    <!-----------------------------------------------------
+    right side
+    --------------------------------->
+    <div class='col-sm-6'>
+        <div class="bg-light">Second Dropzone:</div>
+
+        <Dropzone Items="MySecondList"
+                  TItem="TodoItem"
+                  OnItemDrop="@((i)=>lastdropped = i)"
+                  AllowsDrag='(d)=>d.Titel == "Item 1"'>
+
+            <div style="border: 2px solid black">
+                @context.Titel
+            </div>
+        </Dropzone>
+
+        <hr />
+    </div>
+</div><!-- end of row -->
+
+<div class="bg-light">Third Dropzone (copy items):</div>
+
+<Dropzone CopyItem="(item)=> { return new TodoItem() { Titel = item.Titel }; }"
+          Items="MyThirdList"
+          TItem="TodoItem"
+          OnItemDrop="@((i)=>lastdropped = i)">
+    <div style="border: 2px solid black">
+        @context.Titel
+    </div>
+</Dropzone>
+
+<hr />
+
+<div>Last Dropped Item: @lastdropped?.Titel</div>
+<span>@count</span>
+<span>xxx: @currentCount</span>
+<span>int: @IntCount</span>
+<span>list1: @List1Size</span>
+<span>list2: @List2Size</span>
+
+<h1>Timer</h1>
+
+<button @onclick="StartTimer">Start</button>
+
+
+
+@code {
+
+    private TodoItem lastdropped { get; set; }
+
+    public List<TodoItem> MyFirstList = new List<TodoItem>()
+{
+            new TodoItem(){Titel = "Item 1"},
+            new TodoItem(){Titel = "Item 2"},
+            new TodoItem(){Titel = "Item 3"},
+            new TodoItem(){Titel = "Item 4"},
+            new TodoItem(){Titel = "Item 5"},
+    };
+
+    public List<TodoItem> MySecondList = new List<TodoItem>()
+{
+            new TodoItem(){Titel = "Item 6"},
+            new TodoItem(){Titel = "Item 7"},
+            new TodoItem(){Titel = "Item 8"},
+            new TodoItem(){Titel = "Item 9"},
+            new TodoItem(){Titel = "Item 10"},
+    };
+
+    public List<TodoItem> MyThirdList = new List<TodoItem>()
+    {
+    };
+
+    private int count = 0;
+
+    private void dropzoneChange()
+    {
+        count++;
+    }
+
+    private void overlapOnItemDrop(TodoItem i)
+    {
+        lastdropped = i;
+        //count++;
+    }
+
+
+
+    private static System.Timers.Timer aTimer;
+    private int currentCount = 50;
+    public void StartTimer()
+    {
+        currentCount = 50;
+        aTimer = new System.Timers.Timer(100);
+        aTimer.Elapsed += CountDownTimer;
+        aTimer.Enabled = true;
+    }
+
+
+    public void CountDownTimer(Object source, System.Timers.ElapsedEventArgs e)
+    {
+        if (currentCount > 0)
+        {
+            currentCount -= 1;
+        }
+        else
+        {
+            aTimer.Enabled = false;
+        }
+        InvokeAsync(StateHasChanged);
+    }
+    /**
+     check drop-down / by list size
+    */
+    private int List1Size = 0;
+    private int List2Size = 0;
+    private void CheckDragDrop()
+    {
+        List1Size = MyFirstList.Count();
+        List2Size = MySecondList.Count();
+    }
+    private void SetInitialListSize()
+    {
+        List1Size = MyFirstList.Count();
+        List2Size = MySecondList.Count();
+    }
+    /*
+     start up
+    */
+    protected override void OnInitialized()
+    {
+        StartIntervalTimer();
+        SetInitialListSize();
+    }
+    /**
+     interval timer
+    */
+    private static System.Timers.Timer IntTimer;
+    private int IntCount = 1;
+    public void StartIntervalTimer()
+    {
+        IntCount = 1;
+        IntTimer = new System.Timers.Timer(100);    //100ms
+        IntTimer.Elapsed += IntTimerEvent;
+        IntTimer.Enabled = true;
+    }
+    public void IntTimerEvent(Object source, System.Timers.ElapsedEventArgs e)
+    {
+        if (IntCount > 0)
+        {
+            IntCount = 0;
+        }
+        else
+        {
+            IntCount = 1;
+        }
+        CheckDragDrop();
+        InvokeAsync(StateHasChanged);
+    }
+
+}

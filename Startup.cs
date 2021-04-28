@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using genFurikomiTesuuryo.Data;
+using Plk.Blazor.DragDrop;
 
 namespace genFurikomiTesuuryo
 {
@@ -27,6 +28,7 @@ namespace genFurikomiTesuuryo
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
+            services.AddBlazorDragDrop();
             services.AddSingleton<WeatherForecastService>();
             services.AddSingleton<MyService>();
             services.AddSingleton<GetJson1Service>();
