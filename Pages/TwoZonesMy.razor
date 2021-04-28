@@ -23,7 +23,7 @@
                   TItem="TodoItem"
                   OnItemDrop="@((i)=>lastdropped = i)"
                   AllowsDrag='(d)=>d.Titel == "Item 1"'>
-            <div style="border: 2px solid blue">
+            <div style="border: 2px solid blue;">
                 @context.Titel
             </div>
         </Dropzone>
@@ -120,7 +120,6 @@
     private void overlapOnItemDrop(TodoItem i)
     {
         lastdropped = i;
-        //count++;
     }
 
 
