@@ -1,0 +1,43 @@
+210429
+
+blazor-DragDrop
+
+nugetでblazor-dragdropをいれる。
+Components/Todo.razor を作成
+
+
+Startup.cs----------------------------
+追加
+using Plk.Blazor.DragDrop;
+        public void ConfigureServices(IServiceCollection services)
+        {
+...
+            services.AddBlazorDragDrop();  <<< 追加
+...
+        }
+
+pages/任意のページ.razor
+@using Plk.Blazor.DragDrop;
+
+        <Dropzone Items="MyFirstList"
+                  TItem="TodoItem"
+                  OnItemDrop="@((i)=>lastdropped = i)"
+                  AllowsDrag='(d)=>d.Titel == "Item 1"'>
+            <div style="border: 2px solid blue;">
+                @context.Titel
+            </div>
+        </Dropzone>
+
+@code{
+    private TodoItem lastdropped { get; set; }
+
+    public List<TodoItem> MyFirstList = new List<TodoItem>()
+{
+            new TodoItem(){Titel = "Item 1"},
+            new TodoItem(){Titel = "Item 2"},
+            new TodoItem(){Titel = "Item 3"},
+            new TodoItem(){Titel = "Item 4"},
+            new TodoItem(){Titel = "Item 5"},
+    };
+
+}

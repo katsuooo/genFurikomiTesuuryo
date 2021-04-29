@@ -18,9 +18,11 @@
     [Parameter]
     public EventCallback<TodoItem> OnRemoveClick { get; set; }
 
-    public string BorderColor { get {
+    public string BorderColor { 
+        get {
             if (Item.IsNew) return "gold";
             return "black";
-        } }
+        }
+    }
 
 }

@@ -130,18 +130,11 @@ namespace genFurikomiTesuuryo.Data
                 if(xList.Count() <= 4){
                     xList.Add("");
                 }
-                Console.WriteLine("line-"+ xList.Count().ToString());
                 lineItemsList.Add(xList);
-                //index++;
             }
             var num = lines.Length;
             return Task.FromResult(Enumerable.Range(1, num).Select(index => new GetJson6
-            {/*
-                Date = lines[index-1].Split(' ')[0],
-                Value = int.Parse(lines[index-1].Split(' ')[1]),
-                Name = lines[index-1].Split(' ')[3],
-                Memo = lines[index-1].Split(' ')[4];
-                */
+            {
                 Date = lineItemsList[index-1][0],
                 Value = int.Parse(lineItemsList[index-1][1]),
                 Kind = lineItemsList[index-1][2], 

@@ -10,5 +10,6 @@ namespace genFurikomiTesuuryo.Data
         public string Titel { get; set; }
         public bool IsDone { get; set; }
         public bool IsNew { get; set; }
+        public bool IsCopied { get; set; }
     }
 }
