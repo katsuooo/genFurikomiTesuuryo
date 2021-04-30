@@ -6,6 +6,7 @@
 @using Newtonsoft.Json.Linq
 @using Plk.Blazor.DragDrop
 @using System.Collections.Generic
+@using System
 
 <!--
 銀行側リストをzoneitemのlist of listに
@@ -31,7 +32,7 @@
                 <th style='white-space:nowrap;'>メモ</th>
                 <th style='white-space:nowrap;'>請求額</th>
                 <th style='white-space:nowrap;'>振込手数料</th>
-                <th style='white-space:nowrap;'>marker in</th>
+                <th style='white-space:nowrap;text-align:center;'>marker in</th>
             </tr>
         </thead>
         <tbody>
@@ -41,14 +42,14 @@
             @foreach (var csv in bank)
             {
                 <tr>
-                    <td style='white-space:nowrap;'>@csv.Date</td>
-                    <td style='white-space:nowrap;'>@csv.Value</td>
+                    <td style='white-space:nowrap;text-align:center;'>@csv.Date</td>
+                    <td style='white-space:nowrap;text-align:center;'>@csv.Value</td>
                     <td style='white-space:nowrap;'>@csv.Kind</td>
                     <td style='white-space:nowrap;'>@csv.Name</td>
                     <td style='white-space:nowrap;'>@csv.Memo</td>
-                    <td style='white-space:nowrap;'>@bankZoneList[j][0].Titel</td>
-                    <td style='white-space:nowrap;'></td>
-                    <td>
+                    <td style='white-space:nowrap;'>@billsum(j)</td>
+                    <td style='white-space:nowrap;'>@calcFrikomiTesuuryou(j)</td>
+                    <td style="border:1px dotted #909090;">
                         <Dropzone CopyItem="(item)=> { item.IsCopied = true; 
                                                 return new TodoItem() { Titel = (item.Titel + 'a'),
                                                                         Title = (item.Title),
@@ -60,14 +61,15 @@
                             TItem="TodoItem"
                             OnItemDrop="@((i)=>lastdropped = i)"
                             AllowsDrag='(d)=>d.Titel != "マーカ"'
+                            
                             >
-                            <span class="badge rounded-pill bg-success text-white">
+                            <span class="badge rounded-pill bg-success text-white @((@context.Titel == "0")? "nodisplay":"")">
                                 @context.Titel
                             </span>
                             <span class="badge rounded-pill bg-info text-white">
                                 @context.Title
                             </span>
-                            <span class="badge rounded-pill bg-danger text-white">
+                            <span class="badge rounded-pill bg-danger text-white @((@context.Titel == "0")? "nodisplay":"")">
                                 @context.Value
                             </span>
                         </Dropzone>
@@ -85,7 +87,7 @@
 
 
 <div class='col-sm-5'>
-    <span>last-dropped: @lastdropped</span>
+    <!-- <span>last-dropped: @lastdropped</span> -->
     <h2>請求書データ</h2>
     <div class='row'>
         <!-- drop-zone -->
@@ -196,7 +198,7 @@
         {
             List<TodoItem> bankListx = new List<TodoItem>();
             //bankListx.Add(new TodoItem(){Titel = i.ToString()});
-            bankListx.Add(new TodoItem(){Titel = ""});
+            bankListx.Add(new TodoItem(){Titel = "0"});
             bankZoneList.Add( bankListx );
             i++;
         }
@@ -212,12 +214,46 @@
             bankZoneList.Add( bankListx );
         }
         */
-        debug = bankZoneList[1][0].Titel;
+
 
         /*
          manualで作成
         */
         
+    }
+    /**
+     bill sum
+    */
+    private string billsum(int index){
+        debug = index.ToString();
+        int bill = 0;
+        if(bankZoneList[index].Count() >= 2){
+            //初期ダミーデータがあるので、2以上でデータあり
+            foreach(TodoItem xlist in bankZoneList[index])
+            {
+                //if(typeof(xlist.Value) == "int"){
+                    bill += xlist.Value;
+                //}
+            }
+        }else {
+            bill = 0;
+        }
+        return bill.ToString();
+    }
+    /**
+     振込金額の取得
+    */
+    private int getFurikomiVal(int index)
+    {
+        return bank[index].Value;
+    }
+    /**
+     振込手数料計算
+    */
+    private string calcFrikomiTesuuryou(int index){
+        int furikomi = getFurikomiVal(index);
+        int seikyuu = Int32.Parse(billsum(index));
+        return (furikomi - seikyuu).ToString();
     }
 }
 
