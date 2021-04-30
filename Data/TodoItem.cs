@@ -11,5 +11,8 @@ namespace genFurikomiTesuuryo.Data
         public bool IsDone { get; set; }
         public bool IsNew { get; set; }
         public bool IsCopied { get; set; }
+        public string Title { get; set; }
+        public int Value { get; set; }
+        public string Date { get; set; }
     }
 }

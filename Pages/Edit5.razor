@@ -1,4 +1,4 @@
-@page "/Edit3"
+@page "/Edit5"
 
 @using genFurikomiTesuuryo.Data
 @inject MyService MyService
@@ -16,10 +16,11 @@
 
 <span style='color: red;'>debug: @debug</span>
 <div class='row'>
+
 <div class='col-sm-7'>
     <h2>銀行売上入金データ</h2>
     <div class='row'>
-    <div class='col-sm-10' style='padding-right:0px;'>
+    <div class='col-sm-12' style='padding-right:0px;'>
     <table class='table table-success table-striped table-sm'>
         <thead>
             <tr>
@@ -30,9 +31,13 @@
                 <th style='white-space:nowrap;'>メモ</th>
                 <th style='white-space:nowrap;'>請求額</th>
                 <th style='white-space:nowrap;'>振込手数料</th>
+                <th style='white-space:nowrap;'>marker in</th>
             </tr>
         </thead>
         <tbody>
+            @{
+                var j=0;
+            }
             @foreach (var csv in bank)
             {
                 <tr>
@@ -41,51 +46,40 @@
                     <td style='white-space:nowrap;'>@csv.Kind</td>
                     <td style='white-space:nowrap;'>@csv.Name</td>
                     <td style='white-space:nowrap;'>@csv.Memo</td>
+                    <td style='white-space:nowrap;'>@bankZoneList[j][0].Titel</td>
                     <td style='white-space:nowrap;'></td>
-                    <td style='white-space:nowrap;'></td>
+                    <td>
+                        <Dropzone CopyItem="(item)=> { item.IsCopied = true; 
+                                                return new TodoItem() { Titel = (item.Titel + 'a'),
+                                                                        Title = (item.Title),
+                                                                        Date = (item.Date), 
+                                                                        Value = (item.Value),
+                                                                        IsCopied = true };
+                                            }" 
+                            Items="@bankZoneList[j]"
+                            TItem="TodoItem"
+                            OnItemDrop="@((i)=>lastdropped = i)"
+                            AllowsDrag='(d)=>d.Titel != "マーカ"'
+                            >
+                            <span class="badge rounded-pill bg-success text-white">
+                                @context.Titel
+                            </span>
+                            <span class="badge rounded-pill bg-info text-white">
+                                @context.Title
+                            </span>
+                            <span class="badge rounded-pill bg-danger text-white">
+                                @context.Value
+                            </span>
+                        </Dropzone>
+                    </td>
                 </tr>
+                j++;
             }
+
         </tbody>
     </table>
-    </div>
-        <!-- draggable marker in area -->
-        <!--
-        <div class='col-sm-2' style='padding-left:0px;'>
-            <span style='font-size:12px;'>marKer in</span>
-            <div style='border:1px dashed #808080;'>
-            <Dropzone CopyItem="(item)=> { item.IsCopied = true; return new TodoItem() { Titel = (item.Titel + 'a'), IsCopied = true }; }" 
-                  Items="bankList"
-                  TItem="TodoItem"
-                  OnItemDrop="@((i)=>lastdropped = i)"
-                  AllowsDrag='(d)=>d.Titel != "マーカ"'
-                 >
-                <span class="badge rounded-pill bg-info text-white">
-                    @context.Titel
-                </span>
-            </Dropzone>
-            </div>
-        </div>
-        -->
-        <div class='col-sm-2' style='padding-left:0px;'>
-            <span style='font-size:12px;'>marKer in</span>
-            <div style='border:1px dashed #808080;'>
-                @foreach(var ZoneList in bankZoneList){
-                <Dropzone CopyItem="(item)=> { item.IsCopied = true; return new TodoItem() { Titel = (item.Titel + 'a'), IsCopied = true }; }" 
-                      Items="@ZoneList"
-                    TItem="TodoItem"
-                    OnItemDrop="@((i)=>lastdropped = i)"
-                    AllowsDrag='(d)=>d.Titel != "マーカ"'
-                    >
-                    <span class="badge rounded-pill bg-info text-white">
-                        @context.Titel
-                    </span>
-                </Dropzone>
-                }
-            </div>
-        </div>
-    </div>
+    </div></div>
 </div>
-
 
 
 
@@ -130,8 +124,8 @@
     </table>
         </div>
     </div><!-- row(2nd) -->
-</div>
-</div>
+</div><!-- col-5 -->
+</div><!=- row(1st) -->
 
 
 @code {
@@ -169,7 +163,7 @@
     private void genList(){
         foreach(GetJson7 x in seikyu_sho)
         {
-            seikyuList.Add(new TodoItem(){Titel = x.Date});
+            seikyuList.Add(new TodoItem(){Titel = x.Date, Date = x.Date, Title = x.Title, Value = x.Value});
         }
         
         int i = 0;
@@ -181,14 +175,45 @@
         }
         */
         
+        
         i=0;
+        
+        /*
         foreach(GetJson6 x in bank)
         {
             //Console.WriteLine("bank-list-type-" + typeof(bankZoneList));
             //bankZoneList.Add((System.Collections.Generic.List<TodoItem>)bankList[i]);
-            bankZoneList.Add( new List<TodoItem>() );
+            //TodoItem xxx = new TodoItem(){Titel = "-"};
+            List<TodoItem> bankListx = new List<TodoItem>();
+            bankListx.Add(new TodoItem(){Titel = i.ToString()});
+            //bankZoneList.Add( new List<TodoItem>() );
+            bankZoneList.Add( bankListx );
             i++;
         }
+        */
+        
+        foreach(GetJson6 x in bank)
+        {
+            List<TodoItem> bankListx = new List<TodoItem>();
+            //bankListx.Add(new TodoItem(){Titel = i.ToString()});
+            bankListx.Add(new TodoItem(){Titel = ""});
+            bankZoneList.Add( bankListx );
+            i++;
+        }
+        
+
+
+        /*
+        int i=0;
+        for (i=0; i<bank.Length; i++;)
+        {
+            List<TodoItem> bankListx = new List<TodoItem>();
+            bankListx.Add(new TodoItem(){Titel = i.ToString()});
+            bankZoneList.Add( bankListx );
+        }
+        */
+        debug = bankZoneList[1][0].Titel;
+
         /*
          manualで作成
         */

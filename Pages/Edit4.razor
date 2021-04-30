@@ -1,4 +1,4 @@
-@page "/Edit3"
+@page "/Edit4"
 
 @using genFurikomiTesuuryo.Data
 @inject MyService MyService
@@ -16,6 +16,7 @@
 
 <span style='color: red;'>debug: @debug</span>
 <div class='row'>
+<!--
 <div class='col-sm-7'>
     <h2>銀行売上入金データ</h2>
     <div class='row'>
@@ -48,24 +49,6 @@
         </tbody>
     </table>
     </div>
-        <!-- draggable marker in area -->
-        <!--
-        <div class='col-sm-2' style='padding-left:0px;'>
-            <span style='font-size:12px;'>marKer in</span>
-            <div style='border:1px dashed #808080;'>
-            <Dropzone CopyItem="(item)=> { item.IsCopied = true; return new TodoItem() { Titel = (item.Titel + 'a'), IsCopied = true }; }" 
-                  Items="bankList"
-                  TItem="TodoItem"
-                  OnItemDrop="@((i)=>lastdropped = i)"
-                  AllowsDrag='(d)=>d.Titel != "マーカ"'
-                 >
-                <span class="badge rounded-pill bg-info text-white">
-                    @context.Titel
-                </span>
-            </Dropzone>
-            </div>
-        </div>
-        -->
         <div class='col-sm-2' style='padding-left:0px;'>
             <span style='font-size:12px;'>marKer in</span>
             <div style='border:1px dashed #808080;'>
@@ -85,7 +68,61 @@
         </div>
     </div>
 </div>
+-->
 
+
+<div class='col-sm-7'>
+    <h2>銀行売上入金データ</h2>
+    <div class='row'>
+    <div class='col-sm-12' style='padding-right:0px;'>
+    <table class='table table-success table-striped table-sm'>
+        <thead>
+            <tr>
+                <th style='white-space:nowrap;'>日付</th>
+                <th style='white-space:nowrap;'>金額</th>
+                <th style='white-space:nowrap;'>種別</th>
+                <th style='white-space:nowrap;'>項目</th>
+                <th style='white-space:nowrap;'>メモ</th>
+                <th style='white-space:nowrap;'>請求額</th>
+                <th style='white-space:nowrap;'>振込手数料</th>
+                <th style='white-space:nowrap;'>marker in</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                var j=0;
+            }
+            @foreach (var csv in bank)
+            {
+                <tr>
+                    <td style='white-space:nowrap;'>@csv.Date</td>
+                    <td style='white-space:nowrap;'>@csv.Value</td>
+                    <td style='white-space:nowrap;'>@csv.Kind</td>
+                    <td style='white-space:nowrap;'>@csv.Name</td>
+                    <td style='white-space:nowrap;'>@csv.Memo</td>
+                    <td style='white-space:nowrap;'></td>
+                    <td style='white-space:nowrap;'></td>
+                    <td>
+                        <Dropzone CopyItem="(item)=> { item.IsCopied = true; return new TodoItem() { Titel = (item.Titel + 'a'), IsCopied = true }; }" 
+                            Items="@bankZoneList[j]"
+                            TItem="TodoItem"
+                            OnItemDrop="@((i)=>lastdropped = i)"
+                            AllowsDrag='(d)=>d.Titel != "マーカ"'
+                            >
+                            <span class="badge rounded-pill bg-info text-white">
+                                @context.Titel
+                            </span>
+                        </Dropzone>
+                        <span>@bankZoneList[j][0].Titel</span>
+                    </td>
+                </tr>
+                j++;
+            }
+
+        </tbody>
+    </table>
+    </div></div>
+</div>
 
 
 
@@ -105,6 +142,7 @@
                 <span class="badge rounded-pill text-white @(@context.IsCopied ? "bg-secondary":"bg-info")">
                     @context.Titel
                 </span>
+                <span>@{j.ToString();}</span>
             </Dropzone>
         </div>
         <!-- table area -->
@@ -130,8 +168,8 @@
     </table>
         </div>
     </div><!-- row(2nd) -->
-</div>
-</div>
+</div><!-- col-5 -->
+</div><!=- row(1st) -->
 
 
 @code {
@@ -181,14 +219,33 @@
         }
         */
         
+        
         i=0;
+        
         foreach(GetJson6 x in bank)
         {
             //Console.WriteLine("bank-list-type-" + typeof(bankZoneList));
             //bankZoneList.Add((System.Collections.Generic.List<TodoItem>)bankList[i]);
-            bankZoneList.Add( new List<TodoItem>() );
+            //TodoItem xxx = new TodoItem(){Titel = "-"};
+            List<TodoItem> bankListx = new List<TodoItem>();
+            bankListx.Add(new TodoItem(){Titel = i.ToString()});
+            //bankZoneList.Add( new List<TodoItem>() );
+            bankZoneList.Add( bankListx );
             i++;
         }
+        
+        
+        /*
+        int i=0;
+        for (i=0; i<bank.Length; i++;)
+        {
+            List<TodoItem> bankListx = new List<TodoItem>();
+            bankListx.Add(new TodoItem(){Titel = i.ToString()});
+            bankZoneList.Add( bankListx );
+        }
+        */
+        debug = bankZoneList[1][0].Titel;
+
         /*
          manualで作成
         */
