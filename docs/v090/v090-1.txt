@@ -2,3 +2,21 @@
 
 edit画面を新規に
 edit2を作成
+移動で色かえる。
+
+edit3にする。
+銀行側、dropzone列にする？
+
+listのlist
+
+銀行各行にdropzone(todoItem型のリスト)を設置する。
+foreachで展開するには、
+listのlistを作成する？初期要素0でいいのか？
+1てテストするか。
+
+
+要素１のdropzoneが行数分あればいい
+
+
+
+
