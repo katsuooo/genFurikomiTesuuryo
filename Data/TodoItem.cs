@@ -14,5 +14,6 @@ namespace genFurikomiTesuuryo.Data
         public string Title { get; set; }
         public int Value { get; set; }
         public string Date { get; set; }
+        public bool IsZoneBank { get; set; }
     }
 }

@@ -1,0 +1,262 @@
+@page "/Edit6"
+
+@using genFurikomiTesuuryo.Data
+@inject MyService MyService
+@inject GetJson1Service GetJson1Service
+@using Newtonsoft.Json.Linq
+@using Plk.Blazor.DragDrop
+@using System.Collections.Generic
+@using System
+
+<!--
+銀行側リストをzoneitemのlist of listに
+-->
+
+<h1>Editting Zone</h1>
+
+
+<span style='color: red;'>debug: @debug</span>
+<div class='row'>
+
+<div class='col-sm-7'>
+    <h2>銀行売上入金データ</h2>
+    <div class='row'>
+    <div class='col-sm-12' style='padding-right:0px;'>
+    <table class='table table-success table-striped table-sm'>
+        <thead>
+            <tr>
+                <th style='white-space:nowrap;'>日付</th>
+                <th style='white-space:nowrap;'>金額</th>
+                <th style='white-space:nowrap;'>種別</th>
+                <th style='white-space:nowrap;'>項目</th>
+                <th style='white-space:nowrap;'>メモ</th>
+                <th style='white-space:nowrap;'>請求額</th>
+                <th style='white-space:nowrap;'>振込手数料</th>
+                <th style='white-space:nowrap;text-align:center;'>marker in</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int jj=0;
+            }
+            @foreach (var csv in bank)
+            {
+                int j=jj;
+                <tr>
+                    <td style='white-space:nowrap;text-align:center;'>@csv.Date</td>
+                    <td style='white-space:nowrap;text-align:center;'>@csv.Value</td>
+                    <td style='white-space:nowrap;'>@csv.Kind</td>
+                    <td style='white-space:nowrap;'>@csv.Name</td>
+                    <td style='white-space:nowrap;'>@csv.Memo</td>
+                    <td style='white-space:nowrap;'>@billsum(j)</td>
+                    <td style='white-space:nowrap;'>@calcFrikomiTesuuryou(j)</td>
+                    <td style="border:1px dotted #909090;">
+                        <Dropzone 
+                            CopyItem="(item)=> {  item.IsCopied = true; 
+                                                        return new TodoItem() { Titel = (item.Titel),
+                                                                        Title = (item.Title),
+                                                                        Date = (item.Date), 
+                                                                        Value = (item.Value),
+                                                                        IsZoneBank = true,
+                                                                        IsCopied = true
+                                                                      };
+                                                     }" 
+                            Items="@bankZoneList[j]"
+                            TItem="TodoItem"
+                            OnItemDrop="@((i)=>lastdropped = i)"
+                            AllowsDrag='((d)=>(d.IsCopied == false))'
+                            
+                            >
+                            <span class="badge rounded-pill bg-success text-white @((@context.Titel == "0")? "nodisplay":"")">
+                                @context.Titel
+                            </span>
+                            <span class="badge rounded-pill bg-info text-white">
+                                @context.Title
+                            </span>
+                            <span class="badge rounded-pill bg-danger text-white @((@context.Titel == "0")? "nodisplay":"")">
+                                @context.Value
+                            </span>
+
+                            <span class="badge rounded-pill bg-warning @((@context.Titel == "0")? "nodisplay":"")" @onclick="@( s => dragReset(j, @context))">
+                                reset
+                            </span>
+                        </Dropzone>
+                    </td>
+                </tr>
+                jj++;
+            }
+
+        </tbody>
+    </table>
+    </div></div>
+</div>
+
+
+
+
+<div class='col-sm-5'>
+    <!-- <span>last-dropped: @lastdropped</span> -->
+    <h2>請求書データ</h2>
+    <div class='row'>
+        <!-- drop-zone -->
+        <div class='col-sm-1' style='padding-right:0px;'>
+            <span style='font-size:12px;'>Mark</span>
+            <Dropzone Items="seikyuList"
+                    TItem="TodoItem"
+                    OnItemDrop="@((i)=>lastdropped = i)"
+                    AllowsDrag='(d)=>d.IsCopied == false'
+                    >
+                <span class="badge rounded-pill text-white @(@context.IsCopied ? "bg-secondary":"bg-info")">
+                    @context.Titel
+                </span>
+            </Dropzone>
+        </div>
+        <!-- table area -->
+        <div class='col-sm-11' style='padding-left:10px;'>
+    <table class='table table-danger table-striped table-sm'>
+        <thead>
+            <tr>
+                <th>日付</th>
+                <th>金額</th>
+                <th>項目</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var csv in seikyu_sho)
+            {
+                <tr>
+                    <td>@csv.Date</td>
+                    <td>@csv.Value</td>
+                    <td>@csv.Title</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+        </div>
+    </div><!-- row(2nd) -->
+</div><!-- col-5 -->
+</div><!=- row(1st) -->
+
+
+@code {
+
+    private string debug = "";
+    private TodoItem lastdropped { get; set; }
+
+    private GetJson6[] bank;
+    private GetJson7[] seikyu_sho;
+    /**
+     初期データのリード
+    */
+    protected override async Task OnInitializedAsync()
+    {
+        bank = await GetJson1Service.GetJson6Async("x");
+        seikyu_sho = await GetJson1Service.GetJson7Async("x_uritate");
+        genList();
+    }
+    
+    /**
+     listアイテムのロード
+    */
+    //銀行振込 dragdrop list of list
+    public List<TodoItem> bankList = new List<TodoItem>();
+
+    /*
+     dropZoneのリストの作成
+    */
+    public List<List<TodoItem>> bankZoneList = new List<List<TodoItem>>();
+
+    //請求書 dragdrop list
+    public List<TodoItem> seikyuList = new List<TodoItem>();
+
+
+    private void genList(){
+        foreach(GetJson7 x in seikyu_sho)
+        {
+            seikyuList.Add(new TodoItem(){Titel = x.Date, Date = x.Date, Title = x.Title, Value = x.Value, IsZoneBank = false});
+        }
+        
+        int i = 0;        
+        foreach(GetJson6 x in bank)
+        {
+            List<TodoItem> bankListx = new List<TodoItem>();
+            //bankListx.Add(new TodoItem(){Titel = i.ToString()});
+            bankListx.Add(new TodoItem(){Titel = "0"});
+            bankZoneList.Add( bankListx );
+            i++;
+        }
+        
+        
+    }
+    /**
+     bill sum
+    */
+    private string billsum(int index){
+        int bill = 0;
+        if(bankZoneList[index].Count() >= 2){
+            //初期ダミーデータがあるので、2以上でデータあり
+            foreach(TodoItem xlist in bankZoneList[index])
+            {
+                //if(typeof(xlist.Value) == "int"){
+                    bill += xlist.Value;
+                //}
+            }
+        }else {
+            bill = 0;
+        }
+        return bill.ToString();
+    }
+    /**
+     振込金額の取得
+    */
+    private int getFurikomiVal(int index)
+    {
+        return bank[index].Value;
+    }
+    /**
+     振込手数料計算
+    */
+    private string calcFrikomiTesuuryou(int index){
+        int furikomi = getFurikomiVal(index);
+        int seikyuu = Int32.Parse(billsum(index));
+        return (furikomi - seikyuu).ToString();
+    }
+    /**
+     配列削除
+    */
+    //bankZoneListの要素削除
+    /*
+    private void dragReset(int index)
+    {
+        bankZoneList[index] = new List<TodoItem>();
+        bankZoneList[index].Add(new TodoItem(){Titel = "0"});
+    }
+    */
+    //bankzonelist[x]の要素削除
+    private void dragReset(int index, TodoItem x)
+    {
+        int a=0;
+        int b=0;
+        string aa = bankZoneList[index][1].Titel;
+        string bb = x.Titel;
+        //bankZoneList[index] = new List<TodoItem>();
+        //bankZoneList[index].Add(new TodoItem(){Titel = "0"});
+        //debug = x.Titel;
+        a = bankZoneList[index].Count();
+        //bankZoneList[index].Remove(new TodoItem(){Titel = x.Titel});
+        var xxx = bankZoneList[index].Single(r => r.Titel == x.Titel);
+        bankZoneList[index].Remove(xxx);
+        b = bankZoneList[index].Count();
+        debug = a.ToString() + "," + b.ToString() + "," + aa + "," + bb;
+        foreach(TodoItem l in seikyuList)
+        {
+            if((l.Titel == x.Titel) && (l.Title == x.Title)){
+                var xxxx = seikyuList.Single(r => ((r.Titel == x.Titel)&&(r.Title == x.Title)));
+                xxxx.IsCopied = false;
+                //seikyuList.Remove(xxxx);
+            }
+        }
+    }
+
+}
+

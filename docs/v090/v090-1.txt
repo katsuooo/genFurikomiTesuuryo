@@ -21,6 +21,18 @@ listのlistを作成する？初期要素0でいいのか？
 銀行側、初期値dragdropを設定しないとエラー
 表示が消す。classで消す。
 
+<!--
+            //@foreach (var csv in bank)
+-->
+
+                            <!--
+                            <span class="badge rounded-pill bg-warning @((@context.Titel == "0")? "nodisplay":"")" @onclick="@( s => bankZoneList[j].Remove(new TodoItem(){Titel = @context.Titel}))">
+                            -->
+
+
+            @for (int forCounter=0; forCounter<bank.Length; forCounter++)
 
 
 
+                            -->
+                            <span class="badge rounded-pill bg-warning @((@context.Titel == "0")? "nodisplay":"")" @onclick="@( s => bankZoneList.RemoveAt(j))">
