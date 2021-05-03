@@ -1,0 +1,50 @@
+210503
+右dropzoneもtableに組み込む
+edit7
+
+
+<div class='col-sm-5'  style='transform:scale(0.9);'>
+    <!-- <span>last-dropped: @lastdropped</span> -->
+    <h2>請求書データ</h2>
+    <div class='row'>
+        <!-- drop-zone -->
+        <div class='col-sm-1' style='padding-right:5px;'>
+            <span style='font-size:12px;'>Mark</span>
+            <Dropzone Items="seikyuList"
+                    TItem="TodoItem"
+                    OnItemDrop="@((i)=>lastdropped = i)"
+                    AllowsDrag='(d)=>d.IsCopied == false'
+                    >
+                <span class="badge rounded-pill text-white @(@context.IsCopied ? "bg-secondary":"bg-info")">
+                    @context.Titel
+                </span>
+            </Dropzone>
+        </div>
+        <!-- table area -->
+        <div class='col-sm-11' style='padding-left:10px;'>
+    <table class='table table-danger table-striped table-sm'>
+        <thead>
+            <tr>
+                <th>日付</th>
+                <th>金額</th>
+                <th>項目</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var csv in seikyu_sho)
+            {
+                <tr>
+                    <td>@csv.Date</td>
+                    <td>@csv.Value</td>
+                    <td>@csv.Title</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+        </div>
+    </div><!-- row(2nd) -->
+</div><!-- col-5 -->
+
+
+右はdropzoneがいっこずつでないので、組み込めない。
+高さ合わせてみる。
