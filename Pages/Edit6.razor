@@ -14,11 +14,15 @@
 
 <h1>Editting Zone</h1>
 
-
+<!--
 <span style='color: red;'>debug: @debug</span>
+-->
+<h3>how to use</h3>
+<span>markerをmarkar inにdragdropするとデータの関連付けができます。</span>
+<span>markar inデータの"reset"を押すと、markerが元の位置に戻ります。</span>
 <div class='row'>
 
-<div class='col-sm-7'>
+<div class='col-sm-7'  style='transform:scale(0.9);'>
     <h2>銀行売上入金データ</h2>
     <div class='row'>
     <div class='col-sm-12' style='padding-right:0px;'>
@@ -28,8 +32,7 @@
                 <th style='white-space:nowrap;'>日付</th>
                 <th style='white-space:nowrap;'>金額</th>
                 <th style='white-space:nowrap;'>種別</th>
-                <th style='white-space:nowrap;'>項目</th>
-                <th style='white-space:nowrap;'>メモ</th>
+                <th style='white-space:nowrap;'>項目/メモ</th>
                 <th style='white-space:nowrap;'>請求額</th>
                 <th style='white-space:nowrap;'>振込手数料</th>
                 <th style='white-space:nowrap;text-align:center;'>marker in</th>
@@ -46,8 +49,8 @@
                     <td style='white-space:nowrap;text-align:center;'>@csv.Date</td>
                     <td style='white-space:nowrap;text-align:center;'>@csv.Value</td>
                     <td style='white-space:nowrap;'>@csv.Kind</td>
-                    <td style='white-space:nowrap;'>@csv.Name</td>
-                    <td style='white-space:nowrap;'>@csv.Memo</td>
+                    <td style='white-space:nowrap;'>@csv.Name<br />
+                    @csv.Memo</td>
                     <td style='white-space:nowrap;'>@billsum(j)</td>
                     <td style='white-space:nowrap;'>@calcFrikomiTesuuryou(j)</td>
                     <td style="border:1px dotted #909090;">
@@ -67,6 +70,7 @@
                             AllowsDrag='((d)=>(d.IsCopied == false))'
                             
                             >
+                            <div style='display:flex; flex-direction: row; flex-wrap:nowrap;'>
                             <span class="badge rounded-pill bg-success text-white @((@context.Titel == "0")? "nodisplay":"")">
                                 @context.Titel
                             </span>
@@ -77,9 +81,10 @@
                                 @context.Value
                             </span>
 
-                            <span class="badge rounded-pill bg-warning @((@context.Titel == "0")? "nodisplay":"")" @onclick="@( s => dragReset(j, @context))">
+                            <span class="badge bg-warning @((@context.Titel == "0")? "nodisplay":"")" @onclick="@( s => dragReset(j, @context))">
                                 reset
                             </span>
+                            </div>
                         </Dropzone>
                     </td>
                 </tr>
@@ -94,7 +99,7 @@
 
 
 
-<div class='col-sm-5'>
+<div class='col-sm-5'  style='transform:scale(0.9);'>
     <!-- <span>last-dropped: @lastdropped</span> -->
     <h2>請求書データ</h2>
     <div class='row'>
